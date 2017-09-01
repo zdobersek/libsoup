@@ -9,6 +9,7 @@
 #include <config.h>
 #endif
 
+#include "soup-brotli-decompressor.h"
 #include "soup-content-decoder.h"
 #include "soup-converter-wrapper.h"
 #include "soup.h"
@@ -168,7 +169,7 @@ soup_content_decoder_content_processor_init (SoupContentProcessorInterface *proc
 }
 
 /* This is constant for now */
-#define ACCEPT_ENCODING_HEADER "gzip, deflate"
+#define ACCEPT_ENCODING_HEADER "gzip, deflate, br"
 
 static GConverter *
 gzip_decoder_creator (void)
@@ -180,6 +181,12 @@ static GConverter *
 zlib_decoder_creator (void)
 {
 	return (GConverter *)g_zlib_decompressor_new (G_ZLIB_COMPRESSOR_FORMAT_ZLIB);
+}
+
+static GConverter *
+brotli_decoder_creator (void)
+{
+    return (GConverter *)soup_brotli_decompressor_new ();
 }
 
 static void
@@ -197,6 +204,8 @@ soup_content_decoder_init (SoupContentDecoder *decoder)
 			     gzip_decoder_creator);
 	g_hash_table_insert (decoder->priv->decoders, "deflate",
 			     zlib_decoder_creator);
+	g_hash_table_insert (decoder->priv->decoders, "br",
+			     brotli_decoder_creator);
 }
 
 static void

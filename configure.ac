@@ -196,6 +196,23 @@ required at compile time), but you should be sure to add a runtime
 dependency on it.])
 fi
 
+dnl **************
+dnl *** brotli ***
+dnl **************
+AC_MSG_CHECKING(whether to enable Brotli decoding support)
+AC_ARG_WITH(brotli,
+		AS_HELP_STRING([--with-brotli], [Build with Brotli support [default=no]]))
+AC_MSG_RESULT($with_brotli)
+
+AM_CONDITIONAL(BUILD_LIBSOUP_BROTLI, test $with_brotli = yes)
+
+if test "$with_brotli" = yes; then
+	PKG_CHECK_MODULES(BROTLI, libbrotlidec)
+	AC_SUBST(BROTLI_CFLAGS)
+	AC_SUBST(BROTLI_LIBS)
+	AC_DEFINE(LIBSOUP_HAVE_BROTLI, 1, [Defined if Brotli support is enabled])
+fi
+
 dnl ******************************
 dnl *** Stuff for regression tests
 dnl ******************************

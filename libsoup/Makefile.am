@@ -26,6 +26,10 @@ AM_CPPFLAGS = 				\
 	$(CODE_COVERAGE_CFLAGS)		\
 	$(KRB5_CFLAGS)
 
+if BUILD_LIBSOUP_BROTLI
+AM_CPPFLAGS += $(BROTLI_CFLAGS)
+endif
+
 libsoupincludedir = $(includedir)/libsoup-2.4/libsoup
 
 soup_headers =			\
@@ -104,6 +108,10 @@ libsoup_2_4_la_LIBADD =			\
 	$(XML_LIBS)			\
 	$(SQLITE_LIBS)			\
 	$(KRB5_LIBS)
+
+if BUILD_LIBSOUP_BROTLI
+libsoup_2_4_la_LIBADD += $(BROTLI_LIBS)
+endif
 
 libsoup_2_4_la_SOURCES =		\
 	gconstructor.h			\
@@ -208,6 +216,12 @@ libsoup_2_4_la_SOURCES =		\
 	soup-websocket-connection.c	\
 	soup-xmlrpc.c			\
 	soup-xmlrpc-old.c
+
+if BUILD_LIBSOUP_BROTLI
+libsoup_2_4_la_SOURCES +=		\
+	soup-brotli-decompressor.c	\
+	soup-brotli-decompressor.h
+endif
 
 # TLD rules
 EXTRA_DIST += tld-parser.py
